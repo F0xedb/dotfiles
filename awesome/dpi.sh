@@ -27,7 +27,7 @@ timeout=10 # time to wait before reverting the screen settings
 
 
 function set-screen {
-    for screen in $screens; do
+    for screen in "$screens"; do
         tos screen dpi "$screen" "$1" # set dpi for every screen
     done
 }
