@@ -97,7 +97,7 @@
     interval = 60
     format = <label>
     format-prefix = " "
-    exec = python ~/.config/polybar/scripts/weather.py
+    exec = bash ~/.config/polybar/scripts/weather.sh
 
 [module/powermenu]
     type = custom/menu
@@ -130,7 +130,7 @@ menu-0-1 = "power off   "
 	type = custom/script
 	interval = 1
 	format = %{A1:playerctl -p spotify previous:}⏮%{A}   %{A1:playerctl -p spotify play-pause:}<label>%{A}   %{A1:playerctl -p spotify next:}⏭%{A}
-	exec = python ~/bin/spotify.py -p ▶,⏸ 
+	exec = spotify.py -p ▶,⏸ 
 	format-underline = ${colors.transparent}
 
 [module/i3]

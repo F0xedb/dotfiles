@@ -1,0 +1,228 @@
+# vim: filetype=i3
+# Config created by Tom Meyers
+
+# #---Color---# #
+
+# Red colors
+#set $bordercolor	#9f414a
+
+#blue colors
+set $bordercolor	#04afc1
+default_border none
+
+# class                 border  backgr. text    indicator child_border
+client.focused          $bordercolor $bordercolor #ffffff $bordercolor   $bordercolor
+client.focused_inactive #333333 #5f676a #ffffff #484e50   #5f676a
+client.unfocused        #333333 #222222 #888888 #292d2e   #222222
+client.urgent           #2f343a #900000 #ffffff #900000   #900000
+client.placeholder      #000000 #0c0c0c #ffffff #000000   #0c0c0c
+
+client.background       #ffffff
+
+
+# #---Basic Definitions---# #
+for_window [class="^.*"] border pixel 0
+gaps inner 15
+gaps outer 5
+set $term st
+set $mod Mod4
+set $shutdown sudo -A shutdown -h now
+set $reboot sudo -A reboot
+set $netrefresh --no-startup-id sudo -A systemctl restart NetworkManager
+set $hibernate sudo -A systemctl suspend
+set $HOME /home/zeus
+set $KEY be
+
+input * xkb_layout "$KEY"
+# #---Dropdown Windows---# #
+# General dropdown window traits. The order can matter.
+for_window [instance="dropdown_*"] floating enable
+for_window [class="Wine" instance="exammonitor.exe"] floating enable
+for_window [instance="dropdown_*"] move scratchpad
+for_window [instance="dropdown_*"] sticky enable
+for_window [instance="dropdown_*"] scratchpad show
+for_window [instance="dropdown_tmuxdd"] resize set 625 450
+for_window [instance="dropdown_dropdowncalc"] resize set 800 300
+for_window [instance="dropdown_tmuxdd"] border pixel 3
+for_window [instance="dropdown_dropdowncalc"] border pixel 2
+for_window [instance="dropdown_*"] move position center
+
+# old school status bar
+# To reenable this remove the polybar entry from .oh-my-zsh/load/polybar.sh
+#bar {
+#	font pango:mono 10
+#	status_command i3status
+#	position top
+#	mode dock
+#	modifier None
+#}
+
+
+# #---Basic Bindings---# #
+bindsym $mod+Shift+Return	exec --no-startup-id samedir
+
+bindsym $mod+Shift+space 	floating toggle
+bindsym $mod+space		focus mode_toggle
+
+bindsym $mod+Escape		workspace prev
+bindsym $mod+Shift+Escape 	exec --no-startup-id prompt "Exit i3?" "i3-msg exit"
+
+bindsym $mod+Shift+BackSpace	exec --no-startup-id prompt "Reboot computer?" "$reboot"
+
+bindsym $mod+grave		exec --no-startup-id dmenuunicode
+
+# #---Letter Key Bindings---# #
+bindsym $mod+q			kill
+bindsym $mod+Shift+q		[con_id="__focused__" instance="^(?!dropdown_).*$"] exec --no-startup-id kill -9 `xdotool getwindowfocus getwindowpid`
+
+bindsym $mod+w			exec --no-startup-id $term -e nmtui
+bindsym $mod+Shift+w		exec --no-startup-id firefox-developer-edition
+
+bindsym $mod+t			split toggle
+bindsym $mod+Shift+t		gaps inner current set 15; gaps outer current set 5
+
+bindsym $mod+s			gaps inner current plus 5
+bindsym $mod+Shift+s		gaps inner current minus 5
+
+bindsym $mod+d			exec --no-startup-id  rofi -lines 12 -padding 18 -width 60 -location 0 -show run drun window -sidebar-mode -columns 3 -font 'Fira Code 10' | xargs swaymsg exec --
+bindsym $mod+Shift+d		gaps inner current set 0; gaps outer current set 0
+
+
+bindsym $mod+f			fullscreen toggle
+bindsym $mod+Shift+f		mode "$freeze" ;; exec --no-startup-id notify-send "Distraction-free mode activated." "Press Super+Shift+f to return."
+
+bindsym $mod+g			workspace prev
+bindsym $mod+Shift+g		exec --no-startup-id gimp; workspace $ws5
+
+bindsym $mod+k			focus up
+bindsym $mod+Shift+k		move up 30
+
+bindsym $mod+l			focus right
+bindsym $mod+Shift+l		move right 30
+
+bindsym $mod+z			gaps outer current plus 5
+bindsym $mod+Shift+z		gaps outer current minus 5
+
+bindsym $mod+b			bar mode toggle
+bindsym $mod+Shift+b		floating toggle; sticky toggle; exec --no-startup-id hover left
+
+# #---Workspace Bindings---# #
+bindsym $mod+Home		workspace $ws1
+bindsym $mod+Shift+Home		move container to workspace $ws1
+bindsym $mod+End		workspace $ws10
+bindsym $mod+Shift+End		move container to workspace $ws10
+bindsym $mod+Prior		workspace prev
+bindsym $mod+Shift+Prior	move container to workspace prev
+bindsym $mod+Next		workspace next
+bindsym $mod+Shift+Next		move container to workspace next
+bindsym $mod+Tab		workspace back_and_forth
+bindsym $mod+XF86Back		workspace prev
+bindsym $mod+Shift+XF86Back	move container to workspace prev
+bindsym $mod+XF86Forward	workspace next
+bindsym $mod+Shift+XF86Forward	move container to workspace next
+bindsym $mod+semicolon		workspace next
+bindsym $mod+Shift+slash	kill
+bindsym $mod+backslash		workspace back_and_forth
+
+set $ws1 "1: "
+set $ws2 "2: "
+set $ws3 "3: "
+set $ws4 "4: "
+set $ws5 "5: "
+set $ws6 "6: "
+set $ws7 "7: 7"
+set $ws8 "8: 8"
+set $ws9 "9: 9"
+set $ws10 "10: 10"
+
+# switch to workspace
+bindsym $mod+ampersand	workspace $ws1
+bindsym $mod+eacute		workspace $ws2
+bindsym $mod+quotedbl	workspace $ws3
+bindsym $mod+apostrophe	workspace $ws4
+bindsym $mod+parenleft	workspace $ws5
+bindsym $mod+section	workspace $ws6 # change to § sign
+bindsym $mod+egrave		workspace $ws7
+bindsym $mod+exclam	    workspace $ws8
+bindsym $mod+ccedilla	workspace $ws9
+bindsym $mod+agrave		workspace $ws10
+
+# move focused container to workspace
+bindsym $mod+Shift+ampersand	move container to workspace $ws1
+bindsym $mod+Shift+eacute	    move container to workspace $ws2
+bindsym $mod+Shift+quotedbl	    move container to workspace $ws3
+bindsym $mod+Shift+apostrophe	move container to workspace $ws4
+bindsym $mod+Shift+parenleft	move container to workspace $ws5
+bindsym $mod+Shift+section	    move container to workspace $ws6
+bindsym $mod+Shift+egrave	    move container to workspace $ws7
+bindsym $mod+Shift+exclam	    move container to workspace $ws8
+bindsym $mod+Shift+ccedilla	    move container to workspace $ws9
+bindsym $mod+Shift+agrave	    move container to workspace $ws10
+
+for_window [class="Pinentry"] sticky enable
+for_window [class="sent"] border pixel 0px
+for_window [title="GIMP Startup"] move workspace $ws5
+for_window [class="Gimp"] move workspace $ws5
+for_window [window_role="GtkFileChooserDialog"] resize set 800 600
+for_window [window_role="GtkFileChooserDialog"] move position center
+for_window [title="Default - Wine desktop"] floating enable
+
+# #---Function Buttons---# #
+bindsym $mod+F1     exec --no-startup-id rofiquestion "Do you want to lock your screen" "exec i3lock-next"
+bindsym $mod+F2		exec --no-startup-id rofiquestion "Do you want to suspend?" "exec systemctl suspend"
+bindsym $mod+F3		exec --no-startup-id rofiquestion "Do you want to shutdown?" "exec SUDO_ASKPASS='/home/zeus/bin/rofi/askpass' sudo -A shutdown now"
+bindsym $mod+F4		exec --no-startup-id rofiquestion "Do you want to hibernate?" "exec systemctl hibernate"
+bindsym $mod+F5		exec --no-startup-id rofiselect
+
+# #---Arrow Keys---# #
+bindsym $mod+Left		focus left
+bindsym $mod+Down		focus down
+bindsym $mod+Up			focus up
+bindsym $mod+Right 		focus right
+bindsym $mod+Shift+Left		move left 30
+bindsym $mod+Shift+Down		move down 30
+bindsym $mod+Shift+Up		move up 30
+bindsym $mod+Shift+Right 	move right 30
+
+# #---Extra XF86 Keys---# #
+bindsym XF86PowerOff		exec --no-startup-id rofi -show drun
+bindsym XF86MonBrightnessDown	exec --no-startup-id light -U 15 && dunstify -a "Backlight" -u low -i audio-volume-muted -r "991051" "Decreasing backlight: $(light | awk -F. '{print $1"%"}')"
+bindsym XF86MonBrightnessUp	exec --no-startup-id light -A 15 && dunstify -a "Backlight" -u low -i audio-volume-muted -r "991051" "Increasing backlight: $(light | awk -F. '{print $1"%"}')"
+bindsym XF86Display		exec --no-startup-id displayselect
+bindsym XF86WLAN		exec $netrefresh
+bindsym $mod+Return exec --no-startup-id $term
+bindsym $mod+h split h
+bindsym $mod+v split v
+bindsym XF86AudioRaiseVolume exec amixer -q sset Master 3%+ && dunstify -a "changeVolume" -u low -i audio-volume-muted -r "991049" "Volume up $(amixer get Master | grep 'Front Left: Playback' | awk '{print $5}' | sed -E 's/\[|\]//g')"
+bindsym XF86AudioLowerVolume exec amixer -q sset Master 3%- && dunstify -a "changeVolume" -u low -i audio-volume-muted -r "991049" "Volume Down $(amixer get Master | grep 'Front Left: Playback' | awk '{print $5}' | sed -E 's/\[|\]//g')"
+bindsym XF86AudioMute exec amixer -q set Master toggle && dunstify -a "Volume muted" -u low -i audio-volume-muted -r "991050" "Volume toggled"
+
+# #--- Resizing---# #
+mode "resize" {
+		bindsym Left resize shrink width 10 px or 10 ppt
+		bindsym Down resize grow height 10 px or 10 ppt
+		bindsym Up resize shrink height 10 px or 10 ppt
+		bindsym Right resize grow width 10 px or 10 ppt
+
+		bindsym Return mode "default"; exec dunstify -a "Normal mode" -u low -i audio-volume-muted -r "991052" "Entered normal mode"
+		bindsym Escape mode "default"; exec dunstify -a "Normal mode" -u low -i audio-volume-muted -r "991052" "Entered normal mode"
+}
+
+bindsym $mod+r exec dunstify -a "Resizing mode" -u low -r "991052" "Entered resizing mode"  ;mode "resize"
+exec_always import-gsettings \
+    gtk-theme:gtk-theme-name \
+    icon-theme:gtk-icon-theme-name \
+    cursor-theme:gtk-cursor-theme-name
+
+# execute all i3 dependencies
+
+exec --no-startup-id nohup waybar &> /dev/null &
+exec --no-startup-id nohup compton --config $HOME/.config/compton/compton &> /dev/null &
+
+exec --no-startup-id nohup dunst &> /dev/null &
+exec --no-startup-id nohup sleep 5 && keepalive.sh &> /dev/null &
+output "*" bg $HOME/Pictures/simple.png fill
+
+exec --no-startup-id xrdb $HOME/.Xresources
+exec --no-startup-id nohup st
+exec --no-startup-id touchpad.sh

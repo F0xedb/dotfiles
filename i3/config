@@ -31,7 +31,7 @@ set $reboot sudo -A reboot
 set $netrefresh --no-startup-id sudo -A systemctl restart NetworkManager
 set $hibernate sudo -A systemctl suspend
 set $HOME /home/zeus
-set $KEY be
+set $KEY $(cat /etc/vconsole.conf | cut -d= -f2 | cut -d- -f1)
 
 # #---Dropdown Windows---# #
 # General dropdown window traits. The order can matter.
@@ -110,9 +110,9 @@ bindsym $mod+b			bar mode toggle
 bindsym $mod+Shift+b		floating toggle; sticky toggle; exec --no-startup-id hover left
 
 # #---Workspace Bindings---# #
-bindsym $mod+Home		workspace $ws1
+bindsym $mod+Home		workspace number $ws1
 bindsym $mod+Shift+Home		move container to workspace $ws1
-bindsym $mod+End		workspace $ws10
+bindsym $mod+End		workspace number $ws10
 bindsym $mod+Shift+End		move container to workspace $ws10
 bindsym $mod+Prior		workspace prev
 bindsym $mod+Shift+Prior	move container to workspace prev
@@ -139,28 +139,28 @@ set $ws9 "9: 9"
 set $ws10 "10: 10"
 
 # switch to workspace
-bindsym $mod+1		workspace $ws1
-bindsym $mod+2		workspace $ws2
-bindsym $mod+3		workspace $ws3
-bindsym $mod+4		workspace $ws4
-bindsym $mod+5		workspace $ws5
-bindsym $mod+6		workspace $ws6
-bindsym $mod+7		workspace $ws7
-bindsym $mod+8		workspace $ws8
-bindsym $mod+9		workspace $ws9
-bindsym $mod+0		workspace $ws10
+bindsym $mod+1		workspace number $ws1
+bindsym $mod+2		workspace number $ws2
+bindsym $mod+3		workspace number $ws3
+bindsym $mod+4		workspace number $ws4
+bindsym $mod+5		workspace number $ws5
+bindsym $mod+6		workspace number $ws6
+bindsym $mod+7		workspace number $ws7
+bindsym $mod+8		workspace number $ws8
+bindsym $mod+9		workspace number $ws9
+bindsym $mod+0		workspace number $ws10
 
 # move focused container to workspace
-bindsym $mod+Shift+1	move container to workspace $ws1
-bindsym $mod+Shift+2	move container to workspace $ws2
-bindsym $mod+Shift+3	move container to workspace $ws3
-bindsym $mod+Shift+4	move container to workspace $ws4
-bindsym $mod+Shift+5	move container to workspace $ws5
-bindsym $mod+Shift+6	move container to workspace $ws6
-bindsym $mod+Shift+7	move container to workspace $ws7
-bindsym $mod+Shift+8	move container to workspace $ws8
-bindsym $mod+Shift+9	move container to workspace $ws9
-bindsym $mod+Shift+0	move container to workspace $ws10
+bindsym $mod+Shift+1	move container to workspace number $ws1
+bindsym $mod+Shift+2	move container to workspace number $ws2
+bindsym $mod+Shift+3	move container to workspace number $ws3
+bindsym $mod+Shift+4	move container to workspace number $ws4
+bindsym $mod+Shift+5	move container to workspace number $ws5
+bindsym $mod+Shift+6	move container to workspace number $ws6
+bindsym $mod+Shift+7	move container to workspace number $ws7
+bindsym $mod+Shift+8	move container to workspace number $ws8
+bindsym $mod+Shift+9	move container to workspace number $ws9
+bindsym $mod+Shift+0	move container to workspace number $ws10
 
 for_window [class="Pinentry"] sticky enable
 for_window [class="sent"] border pixel 0px
@@ -171,11 +171,11 @@ for_window [window_role="GtkFileChooserDialog"] move position center
 for_window [title="Default - Wine desktop"] floating enable
 
 # #---Function Buttons---# #
-bindsym $mod+F1     exec rofiquestion "Do you want to lock your screen" "exec i3lock-next"
-bindsym $mod+F2		exec rofiquestion "Do you want to suspend?" "exec systemctl suspend"
-bindsym $mod+F3		exec rofiquestion "Do you want to shutdown?" "exec SUDO_ASKPASS='/home/zeus/bin/rofi/askpass' sudo -A shutdown now"
-bindsym $mod+F4		exec rofiquestion "Do you want to hibernate?" "exec systemctl hibernate"
-bindsym $mod+F5		exec rofiselect
+bindsym $mod+F1     exec --no-startup-id rofiquestion "Do you want to lock your screen" "exec i3lock-next"
+bindsym $mod+F2		exec --no-startup-id rofiquestion "Do you want to suspend?" "exec systemctl suspend"
+bindsym $mod+F3		exec --no-startup-id rofiquestion "Do you want to shutdown?" "exec SUDO_ASKPASS='$HOME/bin/rofi/askpass' sudo -A shutdown now"
+bindsym $mod+F4		exec --no-startup-id rofiquestion "Do you want to hibernate?" "exec systemctl hibernate"
+bindsym $mod+F5		exec --no-startup-id rofiselect
 
 # #---Arrow Keys---# #
 bindsym $mod+Left		focus left
@@ -193,7 +193,7 @@ bindsym XF86MonBrightnessDown	exec --no-startup-id xbacklight -dec 15 && dunstif
 bindsym XF86MonBrightnessUp	exec --no-startup-id xbacklight -inc 15 && dunstify -a "Backlight" -u low -i audio-volume-muted -r "991051" "Increasing backlight: $(xbacklight | awk -F. '{print $1"%"}')"
 bindsym XF86Display		exec --no-startup-id displayselect
 bindsym XF86WLAN		exec $netrefresh
-bindsym $mod+Return exec $term
+bindsym $mod+Return exec --no-startup-id $term
 bindsym $mod+h split h
 bindsym $mod+v split v
 bindsym XF86AudioRaiseVolume exec amixer -q sset Master 3%+ && dunstify -a "changeVolume" -u low -i audio-volume-muted -r "991049" "Volume up $(amixer get Master | grep 'Front Left: Playback' | awk '{print $5}' | sed -E 's/\[|\]//g')"
@@ -216,16 +216,16 @@ bindsym $mod+r exec dunstify -a "Resizing mode" -u low -r "991052" "Entered resi
 
 # execute all i3 dependencies
 
-exec nohup polybar main &> /dev/null &
-exec nohup polybar workspaces &> /dev/null &
-exec nohup compton --config $HOME/.config/compton/compton &> /dev/null &
+exec --no-startup-id nohup polybar main &> /dev/null &
+exec --no-startup-id nohup polybar workspaces &> /dev/null &
+exec --no-startup-id nohup compton --config $HOME/.config/compton/compton &> /dev/null &
 
-exec nohup dunst &> /dev/null &
-exec nohup $HOME/bin/keepalive.sh &> /dev/null &
-exec feh --bg-scale $HOME/Pictures/simple.png
+exec --no-startup-id nohup dunst &> /dev/null &
+exec --no-startup-id nohup keepalive.sh &> /dev/null &
+exec --no-startup-id feh --bg-scale $HOME/Pictures/simple.png
 
-#set xserver keyboard layout
-exec setxkbmap $KEY
+exec --no-startup-id setxkbmap $KEY
+
 
 # Set tapping enabled on my touchpad
 # Your settings might change depending on the touchpad
@@ -234,6 +234,8 @@ exec setxkbmap $KEY
 # xinput list-props <device id>
 # to enable tapping use
 # xinput set-prop <device> <property> 1
-exec xinput set-prop 12 288 1
-exec nohup tos t s ~/Pictures/simple.png &> /dev/null &
-exec nohup tos theme daemon &> /dev/null & # launch a tos daemon
+exec --no-startup-id xinput set-prop 12 288 1
+exec --no-startup-id nohup tos t s ~/Pictures/simple.png &> /dev/null &
+exec --no-startup-id nohup tos theme daemon &> /dev/null & # launch a tos daemon
+exec --no-startup-id nohup st
+exec --no-startup-id touchpad.sh

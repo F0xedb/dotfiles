@@ -45,12 +45,15 @@
 
 !/tos
 tos/theme
+tos/autostart
 
 !/neofetch
 
 !/gtk-3.0
 
 !/openbox
+
+!/awesome
 
 !/.themes
 
